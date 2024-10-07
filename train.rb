@@ -1,6 +1,17 @@
+require_relative 'manufacturer'
+require_relative 'instance_counter'
+
 # class Train declaration
 class Train
+  include Manufacturer
+  include InstanceCounter
+
   attr_reader :speed, :type, :number
+
+  def self.find(number)
+    @@all_trains ||= []
+    (@@all_trains.filter { |item| item.number == number })[0] # to return nil per requirements
+  end
 
   def initialize(number, type)
     @number = number
@@ -9,6 +20,11 @@ class Train
 
     @route = Route.new(nil, nil)
     @wagons = []
+
+    @@all_trains ||= []
+    @@all_trains << self
+
+    register_instance
   end
 
   # public method to speed up train

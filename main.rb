@@ -7,6 +7,8 @@ require_relative 'passenger_train'
 require_relative 'wagon'
 require_relative 'cargo_wagon'
 require_relative 'passenger_wagon'
+require_relative 'instance_counter'
+
 
 # Main application class
 class App
