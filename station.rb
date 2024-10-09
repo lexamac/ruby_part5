@@ -14,10 +14,19 @@ class Station
     @name = name
     @trains = []
 
+    validate!
+
     @@all_stations ||= []
     @@all_stations << self
 
     register_instance
+  end
+
+  # public method to validate stations data
+  def valid?
+    validate!
+  rescue
+    false
   end
 
   # public method to list of trains for the provided type
@@ -33,5 +42,14 @@ class Station
   # public theod to remove(send) train from station
   def send_train
     trains.shift unless trains.empty?
+  end
+
+  protected
+
+  def validate!
+    raise 'Name can\'t be nil' if @name.nil?
+    raise 'Name should be at least 4 symbols' if @name.length < 4
+
+    true
   end
 end

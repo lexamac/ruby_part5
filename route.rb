@@ -9,8 +9,16 @@ class Route
 
   def initialize(start_station, end_station)
     @stations = [start_station, end_station]
+    @stations.compact!
 
     register_instance
+  end
+
+  # public method to validate routes data
+  def valid?
+    validate!
+  rescue
+    false
   end
 
   # public method to add additional station to route
@@ -31,5 +39,14 @@ class Route
   # public method to get info about las station
   def last_station
     stations.last
+  end
+
+  protected
+
+  def validate!
+    raise 'At least Start and End Stations should be created before Route could be created!' if @stations.compact.empty?
+    raise 'At least Start and End Stations should be created before Route could be created!' if @stations.length < 2
+
+    true
   end
 end

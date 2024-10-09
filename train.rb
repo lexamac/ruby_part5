@@ -8,6 +8,9 @@ class Train
 
   attr_reader :speed, :type, :number
 
+  NUMBER_FORMAT = /^[a-z\d]{3}-?[a-z\d]{2}$/i.freeze
+  VALID_TYPES = [:cargo, :passenger]
+
   def self.find(number)
     @@all_trains ||= []
     (@@all_trains.filter { |item| item.number == number })[0] # to return nil per requirements
@@ -18,6 +21,8 @@ class Train
     @type = type
     @speed = 0
 
+    validate!
+
     @route = Route.new(nil, nil)
     @wagons = []
 
@@ -25,6 +30,13 @@ class Train
     @@all_trains << self
 
     register_instance
+  end
+
+  # public method to validate trains data
+  def valid?
+    validate!
+  rescue
+    false
   end
 
   # public method to speed up train
@@ -92,6 +104,17 @@ class Train
   end
 
   protected
+
+  def validate!
+    raise 'Number can\'t be nil' if @number.nil?
+    raise 'Number should be at least 6 symbols' if @number.length < 6
+    raise 'Number has invalid format' if @number !~ NUMBER_FORMAT
+
+    raise 'Type can\'t be nil' if @type.nil?
+    raise 'Type should be cargo or passwnger only' unless VALID_TYPES.include?(@type)
+
+    true
+  end
 
   # none public method for internal use to get current station info
   def current_station
