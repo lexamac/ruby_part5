@@ -47,8 +47,8 @@ class Station
   protected
 
   def validate!
-    raise 'Name can\'t be nil' if @name.nil?
-    raise 'Name should be at least 4 symbols' if @name.length < 4
+    raise ArgumentError.new('Name can\'t be nil') if @name.nil?
+    raise ArgumentError.new('Name should be at least 4 symbols') if @name.length < 4
 
     true
   end

@@ -66,14 +66,17 @@ class App
     stations.push(Station.new(station_name))
 
     puts "Created stations: #{stations}"
-  rescue => e
+  rescue ArgumentError => e
     puts 'Please review the errors and try to create a station once again!'
     puts "Error message: #{e.message}"
+
+    retry
   end
 
   # private method to create routes
   def create_routes
-    puts 'Please create stations before you will create a route and add stations to it!' if stations.empty?
+    puts 'Please create at least Start and End stations before you will create a route and add stations to it!' if stations.empty? || stations.length < 2
+    return create_stations if stations.empty? || stations.length < 2
 
     @my_route = Route.new(nil, nil)
     print 'Route was created, do you want to add stations to it? type y/n: '
@@ -81,10 +84,10 @@ class App
     add_stations = ['y', 'yes'].include?(answer.downcase)
 
     my_route.stations = Array.new(stations) if add_stations
-    stations = [] if add_stations
+    raise ArgumentError.new('At least Start and End stations should be created before Route could be created!') unless my_route.valid?
 
-    raise 'At least Start and End Stations should be created before Route could be created!' unless @my_route.valid?
-  rescue => e
+    @stations = [] if add_stations
+  rescue ArgumentError => e
     puts 'Please review the errors and try to create a route once again:'
     puts "Error message: #{e.message}"
   end
@@ -104,10 +107,13 @@ class App
     my_train.add_route(my_route)
 
     puts 'Train was created and assigned to route, you could proceed with moving train between stations'
-    move_trains
-  rescue => e
+  rescue ArgumentError => e
     puts 'Please review the errors and try to create a train once again!'
     puts "Error message: #{e.message}"
+
+    retry
+  ensure
+    move_trains unless my_train.nil?
   end
 
   # private method to move trains between stations

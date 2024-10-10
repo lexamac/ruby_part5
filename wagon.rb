@@ -22,8 +22,8 @@ class Wagon
   protected
 
   def validate!
-    raise 'Type can\'t be nil' if @type.nil?
-    raise 'Type should be cargo or passwnger only' unless VALID_TYPES.include?(@type)
+    raise ArgumentError.new('Type can\'t be nil') if @type.nil?
+    raise ArgumentError.new('Type should be cargo or passwnger only') unless VALID_TYPES.include?(@type)
 
     true
   end

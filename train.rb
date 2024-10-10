@@ -73,6 +73,8 @@ class Train
 
   # public method to set Route
   def add_route(route)
+    raise ArgumentError.new('Route can\'t be nil') if route.nil?
+
     @route = route
 
     @station_position = 0
@@ -106,12 +108,12 @@ class Train
   protected
 
   def validate!
-    raise 'Number can\'t be nil' if @number.nil?
-    raise 'Number should be at least 6 symbols' if @number.length < 6
-    raise 'Number has invalid format' if @number !~ NUMBER_FORMAT
+    raise ArgumentError.new('Number can\'t be nil') if @number.nil?
+    raise ArgumentError.new('Number should be at least 6 symbols') if @number.length < 6
+    raise ArgumentError.new('Number has invalid format') if @number !~ NUMBER_FORMAT
 
-    raise 'Type can\'t be nil' if @type.nil?
-    raise 'Type should be cargo or passwnger only' unless VALID_TYPES.include?(@type)
+    raise ArgumentError.new('Type can\'t be nil') if @type.nil?
+    raise ArgumentError.new('Type should be cargo or passwnger only') unless VALID_TYPES.include?(@type)
 
     true
   end

@@ -44,8 +44,8 @@ class Route
   protected
 
   def validate!
-    raise 'At least Start and End Stations should be created before Route could be created!' if @stations.compact.empty?
-    raise 'At least Start and End Stations should be created before Route could be created!' if @stations.length < 2
+    raise ArgumentError.new('At least Start and End Stations should be created before Route could be created!') if @stations.compact.empty?
+    raise ArgumentError.new('At least Start and End Stations should be created before Route could be created!') if @stations.length < 2
 
     true
   end
