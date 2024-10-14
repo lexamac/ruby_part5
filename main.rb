@@ -16,6 +16,7 @@ class App
 
   def initialize
     @stations = []
+    @trains = []
     @my_route = nil
     @my_train = nil
   end
@@ -27,7 +28,7 @@ class App
     loop do
       print_menu
       option = gets.chomp.to_i
-      break if option == 4
+      break if option == 6
 
       menu_actions(option)
     end
@@ -43,7 +44,9 @@ class App
     puts '1. Create a Station'
     puts '2. Create a Route'
     puts '3. Create a Train'
-    puts '4. Exit'
+    puts '4. Get Stations info'
+    puts '5. Get Trains info'
+    puts '6. Exit'
     puts
   end
 
@@ -53,6 +56,8 @@ class App
     when 1 then create_stations
     when 2 then create_routes
     when 3 then create_trains
+    when 4 then stations_info
+    when 5 then trains_info
     else
       puts 'Unknown option was selected!'
     end
@@ -113,7 +118,47 @@ class App
 
     retry
   ensure
-    move_trains unless my_train.nil?
+    unless my_train.nil?
+      @trains << my_train
+      add_wagons
+      move_trains
+    end
+  end
+
+  # private method to add wagons
+  def add_wagons
+    loop do
+      puts 'Please select an option to add or remove wagons from train:'
+      puts
+      puts '1. Add wagon'
+      puts '2. Remove wagon'
+      puts '3. Exit'
+      puts
+      wagon_option = gets.chomp.to_i
+
+      case wagon_option
+      when 1 then add_wagon
+      when 2 then my_train.remove_wagon
+      when 3
+        break
+      else
+        puts 'Unknown option was selected!'
+      end
+    end
+  end
+
+  # private method to add wagons
+  def add_wagon
+    puts 'How many wagons do you want to add?'
+    wagon_count = gets.chomp.to_i
+
+    wagon_count.times do |index|
+      print "Please enter #{index} cargo wagon volume: " if my_train.type == :cargo
+      print "Please enter #{index} }passenger wagon size: " if my_train.type == :passenger
+      wagon_size = gets.chomp.to_i
+
+      my_train.add_wagon(my_train.type == :cargo ? CargoWagon.new(wagon_size) : PassengerWagon.new(wagon_size))
+    end
   end
 
   # private method to move trains between stations
@@ -136,5 +181,15 @@ class App
         puts 'Unknown option was selected!'
       end
     end
+  end
+
+  def stations_info
+    puts 'No stations creaetd yet!' if stations.empty?
+    puts stations
+  end
+
+  def trains_info
+    puts 'No trains created yet!' if @trains.empty?
+    puts @trains
   end
 end

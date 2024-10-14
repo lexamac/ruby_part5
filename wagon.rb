@@ -4,10 +4,13 @@ require_relative 'manufacturer'
 class Wagon
   include Manufacturer
 
-  attr_accessor :type
+  attr_reader :type, :number
+
+  VALID_TYPES = [:cargo, :passenger]
 
   def initialize(type)
     @type = type
+    @number = rand(100..999)
 
     validate!
   end

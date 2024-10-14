@@ -51,24 +51,49 @@ class Train
 
   # public method to add wagons to train
   def add_wagon(wagon)
-    puts 'Train must be stopped before wagons could be added!' unless speed > 0
-    return unless speed > 0
+    puts 'Train must be stopped before wagons could be added!' unless speed.zero?
+    return unless speed.zero?
 
     puts 'Invalid type of wagon for this kind of Train!' unless type == wagon.type
     return unless type == wagon.type
 
-    @wagons << wagon if type == wagon.type
-    puts "Wagon was added, train has #{@wagons.length} wagons now." if type == wagon.type
+    @wagons << wagon
   end
 
   # public method to remove wagons from train
   def remove_wagon
-    puts 'Train must be stopped before wagons could be added!' unless speed.positive?
+    puts 'Train must be stopped before wagons could be removed' unless speed.zero?
     return unless speed.positive?
 
     @wagons.pop
 
     puts "Wagon was removed, train has #{@wagons.length} wagons now."
+  end
+
+  # public method to get wagons count
+  def wagons_count
+    @wagons.length
+  end
+
+  # public method to iterate over wagons
+  def each_wagon
+    @wagons.each do |wagon|
+      yield(wagon)
+    end
+  end
+
+  # public method to string
+  def to_s
+    puts "Train Number: #{number}, Type: #{type.to_s}, Speed: #{speed}"
+    puts "Wagons Count: #{wagons_count}"
+    each_wagon do |wagon|
+      puts
+      puts "Wagon Number: #{wagon.number}"
+      puts "Wagon Type: #{wagon.type}"
+      puts "Free volume #{wagon.free_volume}, Taken volume: #{wagon.taken_volume}" if wagon.type == :cargo
+      puts "Free seats #{wagon.free_seats}, Taken seats: #{wagon.taken_seats}" if wagon.type == :passenger
+      puts
+    end
   end
 
   # public method to set Route

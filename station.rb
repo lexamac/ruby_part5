@@ -39,9 +39,29 @@ class Station
     trains << train
   end
 
-  # public theod to remove(send) train from station
+  # public method to remove(send) train from station
   def send_train
     trains.shift unless trains.empty?
+  end
+
+  # public method to iterate over trains
+  def each_train
+    trains.each do |train|
+      yield(train)
+    end
+  end
+
+  # public method to string
+  def to_s
+    puts "Station Name: #{name}"
+    puts "Trains on station = #{trains.length} :"
+    each_train do |train|
+      puts
+      puts "Train Number: #{train.number}"
+      puts "Train Type: #{train.type}"
+      puts "Wagons Count: #{train.wagons_count}"
+      puts
+    end
   end
 
   protected
