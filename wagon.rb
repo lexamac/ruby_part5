@@ -1,4 +1,5 @@
 require_relative 'manufacturer'
+require_relative 'validation'
 
 # class Wagon declaration
 class Wagon

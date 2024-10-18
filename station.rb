@@ -1,4 +1,5 @@
 require_relative 'instance_counter'
+require_relative 'validation'
 
 # class Station declaration
 class Station
@@ -8,7 +9,7 @@ class Station
   attr_reader :trains, :name
 
   validate :name, :presence
-  validate :name, :length,  6
+  validate :name, :length, 6
 
   def self.all
     @@all_stations ||= []

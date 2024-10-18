@@ -6,7 +6,7 @@ module Validation
   end
 
   module ClassMethods
-    def validate(attr_name, validation_type, validation_arg)
+    def validate(attr_name, validation_type, *validation_arg)
       @attrs ||= []
       @attrs << { name: attr_name, type: validation_type, arg: validation_arg }
     end
@@ -23,7 +23,7 @@ module Validation
       self.class.instance_variable_get('@attrs').each do |attr|
         name = attr[:name]
         value = instance_variable_get("@#{attr}")
-        arg = attr[:arg]
+        arg = attr[:arg][0]
         type = attr[:type]
         send "validate_#{type}", name, value, arg
       end

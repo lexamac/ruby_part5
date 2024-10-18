@@ -1,5 +1,6 @@
 require_relative 'manufacturer'
 require_relative 'instance_counter'
+require_relative 'validation'
 
 # class Train declaration
 class Train
@@ -138,17 +139,6 @@ class Train
   end
 
   protected
-
-  def validate!
-    raise ArgumentError.new('Number can\'t be nil') if @number.nil?
-    raise ArgumentError.new('Number should be at least 6 symbols') if @number.length < 6
-    raise ArgumentError.new('Number has invalid format') if @number !~ NUMBER_FORMAT
-
-    raise ArgumentError.new('Type can\'t be nil') if @type.nil?
-    raise ArgumentError.new('Type should be cargo or passwnger only') unless VALID_TYPES.include?(@type)
-
-    true
-  end
 
   # none public method for internal use to get current station info
   def current_station
