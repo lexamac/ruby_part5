@@ -3,10 +3,15 @@ require_relative 'manufacturer'
 # class Wagon declaration
 class Wagon
   include Manufacturer
+  include Validation
 
   attr_reader :type, :number, :total_capacity, :used_capacity
 
   VALID_TYPES = [:cargo, :passenger]
+
+  validate :number,         :presence
+  validate :include,        :type,    VALID_TYPES
+  validate :total_capacity, :positive
 
   def initialize(type, capacity)
     @type = type
@@ -39,13 +44,5 @@ class Wagon
   def validate_capacity!(capacity)
     raise 'There is no enough capacity' if used_capacity == total_capacity
     raise "Free capacity is not enough to be taken with #{capacity} space!" if capacity > free_capacity
-  end
-
-  def validate!
-    raise ArgumentError.new('Type can\'t be nil') if type.nil?
-    raise ArgumentError.new('Type should be cargo or passwnger only') unless VALID_TYPES.include?(type)
-    raise ArgumentError.new('Capacity can\'t be empty') if total_capacity.nil? || total_capacity.zero? || total_capacity.negative?
-
-    true
   end
 end

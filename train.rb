@@ -5,11 +5,18 @@ require_relative 'instance_counter'
 class Train
   include Manufacturer
   include InstanceCounter
+  include Validation
 
   attr_reader :speed, :type, :number
 
   NUMBER_FORMAT = /^[a-z\d]{3}-?[a-z\d]{2}$/i.freeze
   VALID_TYPES = [:cargo, :passenger]
+
+  validate :number, :presence
+  validate :number, :length,  6
+  validate :number, :format,  NUMBER_FORMAT
+  validate :type,   :include, VALID_TYPES
+  validate :speed,  :positive
 
   def self.find(number)
     @@all_trains ||= []

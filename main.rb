@@ -8,10 +8,12 @@ require_relative 'wagon'
 require_relative 'cargo_wagon'
 require_relative 'passenger_wagon'
 require_relative 'instance_counter'
-
+require_relative 'validation'
+require_relative 'accessors'
 
 # Main application class
 class App
+  include Accessors
   attr_reader :my_train, :my_route, :stations
 
   def initialize

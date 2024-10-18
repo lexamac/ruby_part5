@@ -3,8 +3,12 @@ require_relative 'instance_counter'
 # class Station declaration
 class Station
   include InstanceCounter
+  include Validation
 
   attr_reader :trains, :name
+
+  validate :name, :presence
+  validate :name, :length,  6
 
   def self.all
     @@all_stations ||= []
@@ -62,14 +66,5 @@ class Station
       puts "Wagons Count: #{train.wagons_count}"
       puts
     end
-  end
-
-  protected
-
-  def validate!
-    raise ArgumentError.new('Name can\'t be nil') if @name.nil?
-    raise ArgumentError.new('Name should be at least 4 symbols') if @name.length < 4
-
-    true
   end
 end
