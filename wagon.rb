@@ -11,7 +11,7 @@ class Wagon
   VALID_TYPES = [:cargo, :passenger]
 
   validate :number,         :presence
-  validate :include,        :type,    VALID_TYPES
+  validate :type,           :include, VALID_TYPES
   validate :total_capacity, :positive
 
   def initialize(type, capacity)

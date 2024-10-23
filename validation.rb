@@ -5,6 +5,10 @@ module Validation
     base.send :include, InstanceMethods
   end
 
+  def self.inherited(subclass)
+    subclass.extend ClassMethods
+  end
+
   module ClassMethods
     def validate(attr_name, validation_type, *validation_arg)
       @attrs ||= []
@@ -20,7 +24,13 @@ module Validation
     private
 
     def validate!
-      self.class.instance_variable_get('@attrs').each do |attr|
+      if self.class.superclass == Object
+        source_class = self.class
+      else
+        source_class = self.class.superclass
+      end
+
+      source_class.instance_variable_get('@attrs').each do |attr|
         name = attr[:attr_name]
         value = instance_variable_get("@#{name}")
         arg = attr[:attr_args][0]
@@ -34,7 +44,7 @@ module Validation
     end
 
     def validate_format(attr_name, attr_value, regex_arg)
-      raise ArgumentError.new("Format of #{attr_name} should be #{regex_arg}") unless attr_value =~ regex
+      raise ArgumentError.new("Format of #{attr_name} should be #{regex_arg}") unless attr_value =~ regex_arg
     end
 
     def validate_type(attr_name, attr_value, type_arg)
@@ -46,7 +56,7 @@ module Validation
     end
 
     def validate_positive(attr_name, attr_value, _)
-      raise ArgumentError.new("#{attr_name}: #{attr_value} should be positive.") unless attr_value.positive?
+      raise ArgumentError.new("#{attr_name}: #{attr_value} should be positive.") unless attr_value.zero? || attr_value.positive?
     end
 
     def validate_length(attr_name, attr_value, length_arg)
